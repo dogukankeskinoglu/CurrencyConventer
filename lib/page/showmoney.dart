@@ -1,12 +1,12 @@
 import 'package:DovizCevirici/model/money.dart';
+import 'package:DovizCevirici/static.dart';
 
 import 'package:flutter/material.dart';
 
 class GeneralMoney extends StatelessWidget {
   Map<String, double> map_;
   Future<Money> l;
-  List<String> key_;
-  List<double> value; //= new List<double>();
+  Singleton sing = new Singleton();
 
   GeneralMoney(this.l);
 
@@ -19,21 +19,21 @@ class GeneralMoney extends StatelessWidget {
           Map<String, double> new_map = Map.from(snapshot.data.rates).map((k,
                   v) =>
               MapEntry<String, double>(k, double.parse(v.toStringAsFixed(5))));
-          key_ = new_map.keys.toList();
-          key_.sort((a, b) => a.compareTo(b));
+          sing.key = new_map.keys.toList();
+          sing.key.sort((a, b) => a.compareTo(b));
 
-          value = key_.map((e) => new_map[e]).toList();
+          sing.value = sing.key.map((e) => new_map[e]).toList();
 
           return GridView.builder(
             gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3),
             itemBuilder: (context, index) => Card(
               child: ListTile(
-                title: Text(key_[index]),
-                subtitle: Text(value[index].toString()),
+                title: Text(sing.key[index]),
+                subtitle: Text(sing.value[index].toString()),
               ),
             ),
-            itemCount: key_.length,
+            itemCount: sing.key.length,
           );
         } else {
           return Center(child: CircularProgressIndicator());

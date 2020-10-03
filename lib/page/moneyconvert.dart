@@ -15,25 +15,14 @@ class ConvertMoney extends StatefulWidget {
 }
 
 class _ConvertMoneyState extends State<ConvertMoney> {
-  double d1value;
-  double d2value;
   Key k0;
   Key k1;
-  String dropdownhint;
-  CustomDropDown d1;
-  CustomDropDown d2;
-  List<String> key;
-  List<double> value;
+
   Singleton sing = new Singleton();
-  TextEditingController myController;
-  TextEditingController myController2;
+
   @override
   void initState() {
     super.initState();
-    d1value = 1;
-    d2value = 1;
-    myController = sing.myController;
-    myController2 = sing.myController2;
   }
 
   @override
@@ -68,24 +57,26 @@ class _ConvertMoneyState extends State<ConvertMoney> {
           Map<String, double> new_map = Map.from(snapshot.data.rates).map((k,
                   v) =>
               MapEntry<String, double>(k, double.parse(v.toStringAsFixed(5))));
-          key = new_map.keys.toList();
-          key.sort((a, b) => a.compareTo(b));
-          value = key.map((e) => new_map[e]).toList();
+          sing.key = new_map.keys.toList();
+          sing.key.sort((a, b) => a.compareTo(b));
+          sing.value = sing.key.map((e) => new_map[e]).toList();
           //debugPrint(snapshot.data.rates["TRY"].toString());
-          d1 = CustomDropDown(key, value, k0, d1value); //getDropDown(),
-          d2 = CustomDropDown(key, value, k1, d2value);
+          sing.dropdown1 = CustomDropDown(
+              sing.key, sing.value, k0, sing.dropdownvalue1); //getDropDown(),
+          sing.dropdown2 =
+              CustomDropDown(sing.key, sing.value, k1, sing.dropdownvalue2);
           return Column(
             children: [
               Row(
                 children: [
-                  getDropDown(d1, 0),
-                  getTextFormField(myController, true, "Para Miktari")
+                  getDropDown(sing.dropdown1, 0),
+                  getTextFormField(sing.myController, true, "Para Miktari")
                 ],
               ),
               Row(
                 children: [
-                  getDropDown(d2, 1),
-                  getTextFormField(myController2, true, "Toplam Para")
+                  getDropDown(sing.dropdown2, 1),
+                  getTextFormField(sing.myController2, true, "Toplam Para")
                 ],
               )
             ],
@@ -98,18 +89,14 @@ class _ConvertMoneyState extends State<ConvertMoney> {
   }
 
   guncelTutar() {
-    if (myController.text == "") {
-      setState(() {
-        myController2.text = "";
-      });
-    } else {
-      double guncelToplam = 0;
-      guncelToplam = double.parse(myController.text) *
-          (d2.getDropDownValue() / d1.getDropDownValue());
-      setState(() {
-        myController2.text = guncelToplam.toStringAsFixed(2);
-      });
-    }
+    double guncelToplam = 0;
+    print("girdi");
+
+    guncelToplam = double.parse(sing.myController.text) *
+        (sing.dropdown2.getDropDownValue() / sing.dropdown1.getDropDownValue());
+    setState(() {
+      sing.myController2.text = guncelToplam.toStringAsFixed(2);
+    });
   }
 
   getTextFormField(
@@ -158,18 +145,19 @@ class _ConvertMoneyState extends State<ConvertMoney> {
                   value: dropdownvalue[dropdownkey.indexOf(e)]))
               .toList(),
           onChanged: (value) {
-            setState(() {
-              switch (key) {
-                case 0:
-                  d1value = value;
-                  guncelTutar();
-                  break;
-                case 1:
-                  d2value = value;
-                  guncelTutar();
-                  break;
-              }
-            });
+            switch (key) {
+              case 0:
+                sing.dropdown1.setDropDownValue(value);
+                sing.dropdownvalue1 = value;
+                guncelTutar();
+                break;
+              case 1:
+                sing.dropdown2.setDropDownValue(value);
+                sing.dropdownvalue2 = value;
+
+                guncelTutar();
+                break;
+            }
           },
         ),
       ),

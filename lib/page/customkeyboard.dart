@@ -49,16 +49,23 @@ class MyKeyboard extends StatelessWidget {
             print(index.toString());
             switch (keyboardNumber[index]) {
               case "-1":
-                if (con1.text.length != 0)
+                if (con1.text.length != 0) {
+                  if (con1.text.length == 1) {
+                    con2.text = "";
+                  }
                   con1.text = con1.text.substring(0, con1.text.length - 1);
-                else {
+                } else {
                   con2.text = "";
                 }
                 break;
               default:
-                sing.myController.text += keyboardNumber[index].toString();
+                con1.text += keyboardNumber[index].toString();
                 break;
             }
+          },
+          onLongPress: () {
+            con1.text = "";
+            con2.text = "";
           },
         ),
       ),
