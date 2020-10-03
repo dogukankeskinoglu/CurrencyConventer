@@ -43,7 +43,7 @@ class MyKeyboard extends StatelessWidget {
               child: Center(
                   child: keyboardNumber[index] != "-1"
                       ? Text(keyboardNumber[index].toString(),
-                          style: TextStyle(fontSize: 20))
+                          style: TextStyle(fontSize: 22))
                       : Icon(Icons.backspace))),
           onTap: () {
             print(index.toString());
